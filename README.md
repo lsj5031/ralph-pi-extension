@@ -40,7 +40,7 @@ Ralph is an autonomous development agent that:
 
 1. **Clone this repository:**
 ```bash
-git clone https://github.com/your-username/ralph-pi-extension.git
+git clone https://github.com/lsj5031/ralph-pi-extension.git
 cd ralph-pi-extension
 ```
 

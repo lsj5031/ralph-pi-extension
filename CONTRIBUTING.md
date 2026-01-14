@@ -15,7 +15,7 @@ Thank you for your interest in contributing to Ralph! This document provides gui
 
 1. **Fork and clone the repository:**
 ```bash
-git clone https://github.com/your-username/ralph-pi-extension.git
+git clone https://github.com/lsj5031/ralph-pi-extension.git
 cd ralph-pi-extension
 ```
 
