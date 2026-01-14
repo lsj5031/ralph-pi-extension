@@ -1,9 +1,13 @@
 # Ralph - Autonomous AI Agent for Pi
 
-Autonomous AI agent loop that works through PRDs iteratively until complete. Each iteration spawns a fresh pi agent instance with clean context, implementing the Ralph pattern for systematic feature development.
+> **Inspired by [snarktank/ralph](https://github.com/snarktank/ralph)** - This extension brings the Ralph autonomous AI pattern to the pi code agent framework.
 
-![Ralph](https://img.shields.io/badge/Ralph-Autonomous%20Agent-blue)
-![Pi](https://img.shields.io/badge/Pi-Code%20Agent-green)
+[![Release](https://img.shields.io/github/v/release/lsj5031/ralph-pi-extension)](https://github.com/lsj5031/ralph-pi-extension/releases/latest)
+[![License](https://img.shields.io/github/license/lsj5031/ralph-pi-extension)](LICENSE)
+[![Ralph](https://img.shields.io/badge/Ralph-Autonomous%20Agent-blue)](https://github.com/lsj5031/ralph-pi-extension)
+[![Pi](https://img.shields.io/badge/Pi-Code%20Agent-green)](https://github.com/badlogic/pi-mono)
+
+Autonomous AI agent loop that works through PRDs iteratively until complete. Each iteration spawns a fresh pi agent instance with clean context, implementing the Ralph pattern for systematic feature development.
 
 ## 🎯 What is Ralph?
 
@@ -258,15 +262,19 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 
 ## 🙏 Credits
 
-- Original Ralph pattern: [snarktank/ralph](https://github.com/snarktank/ralph)
-- Based on Geoffrey Huntley's [Ralph article](https://ghuntley.com/ralph/)
-- Converted for pi code agent
+This project is inspired by and based on:
+- **[snarktank/ralph](https://github.com/snarktank/ralph)** - Original Ralph implementation for autonomous AI development
+- **Geoffrey Huntley's [Ralph article](https://ghuntley.com/ralph/)** - Concept and methodology
+- **[pi code agent](https://github.com/badlogic/pi-mono)** - The pi agent framework
+
+This extension converts the Ralph pattern to work with the pi code agent, enabling autonomous PRD execution with fresh AI instances per iteration.
 
 ## 📮 Support
 
-- 📧 Email: your-email@example.com
-- 🐛 Issues: [GitHub Issues](https://github.com/your-username/ralph-pi-extension/issues)
-- 💬 Discussions: [GitHub Discussions](https://github.com/your-username/ralph-pi-extension/discussions)
+- 📖 Documentation: [Full Docs](docs/)
+- 🐛 Issues: [GitHub Issues](https://github.com/lsj5031/ralph-pi-extension/issues)
+- 💬 Discussions: [GitHub Discussions](https://github.com/lsj5031/ralph-pi-extension/discussions)
+- 📮 Support: [Support Guide](SUPPORT.md)
 
 ---
 

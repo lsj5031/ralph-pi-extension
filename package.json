@@ -1,7 +1,7 @@
 {
   "name": "ralph-pi-extension",
   "version": "1.0.0",
-  "description": "Autonomous AI agent for pi that works through PRDs iteratively",
+  "description": "Autonomous AI agent for pi that works through PRDs iteratively. Based on snarktank/ralph.",
   "main": "ralph.ts",
   "scripts": {
     "test": "echo \"Run tests using pi\" && exit 0"
@@ -12,18 +12,19 @@
     "autonomous",
     "prd",
     "code-generation",
-    "automation"
+    "automation",
+    "ralph"
   ],
-  "author": "Your Name",
+  "author": "leo <lsj5031>",
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "https://github.com/your-username/ralph-pi-extension.git"
+    "url": "https://github.com/lsj5031/ralph-pi-extension.git"
   },
   "bugs": {
-    "url": "https://github.com/your-username/ralph-pi-extension/issues"
+    "url": "https://github.com/lsj5031/ralph-pi-extension/issues"
   },
-  "homepage": "https://github.com/your-username/ralph-pi-extension#readme",
+  "homepage": "https://github.com/lsj5031/ralph-pi-extension#readme",
   "engines": {
     "node": ">=18.0.0"
   }
