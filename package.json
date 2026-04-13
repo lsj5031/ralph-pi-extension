@@ -7,6 +7,7 @@
     "test": "echo \"Run tests using pi\" && exit 0"
   },
   "keywords": [
+    "pi-package",
     "pi",
     "ai-agent",
     "autonomous",
