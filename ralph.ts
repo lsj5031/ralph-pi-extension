@@ -13,9 +13,8 @@
  * Based on: https://github.com/snarktank/ralph
  */
 
-import type { ExtensionAPI, ExtensionContext } from "@mariozechner/pi-coding-agent";
+import type { ExtensionAPI } from "@mariozechner/pi-coding-agent";
 import { Type } from "@sinclair/typebox";
-import { StringEnum } from "@mariozechner/pi-ai";
 import { readFileSync, writeFileSync, existsSync, mkdirSync, appendFileSync } from "node:fs";
 import { join, dirname } from "node:path";
 import { execSync } from "node:child_process";
@@ -203,7 +202,7 @@ export default function (pi: ExtensionAPI) {
     label: "Next Story",
     description: "Get the next pending user story from the PRD (highest priority where passes=false)",
     parameters: Type.Object({}),
-    async execute(toolCallId, params, onUpdate, ctx, signal) {
+    async execute(toolCallId, params, signal, onUpdate, ctx) {
       const prdPath = join(ctx.cwd, "prd.json");
       const prd = loadPRD(prdPath);
 
@@ -252,7 +251,7 @@ export default function (pi: ExtensionAPI) {
         Type.Number({ description: "Maximum number of iterations (default: 10)" })
       ),
     }),
-    async execute(toolCallId, params, onUpdate, ctx, signal) {
+    async execute(toolCallId, params, signal, onUpdate, ctx) {
       const maxIterations = params.maxIterations || 10;
       const prdPath = join(ctx.cwd, "prd.json");
 
@@ -459,7 +458,7 @@ Begin now by reading progress.txt, then using ralph_next_story.`;
           "Learnings from this iteration (patterns discovered, gotchas, useful context)",
       }),
     }),
-    async execute(toolCallId, params, onUpdate, ctx, signal) {
+    async execute(toolCallId, params, signal, onUpdate, ctx) {
       const prdPath = join(ctx.cwd, "prd.json");
       let prd = loadPRD(prdPath);
 
@@ -526,7 +525,7 @@ Begin now by reading progress.txt, then using ralph_next_story.`;
     label: "View Progress",
     description: "View the progress log from previous iterations",
     parameters: Type.Object({}),
-    async execute(toolCallId, params, onUpdate, ctx, signal) {
+    async execute(toolCallId, params, signal, onUpdate, ctx) {
       const progressPath = join(ctx.cwd, PROGRESS_FILE);
 
       if (!existsSync(progressPath)) {
@@ -555,7 +554,7 @@ Begin now by reading progress.txt, then using ralph_next_story.`;
           "Commands to run (e.g., ['npm run typecheck', 'npm test']). Defaults to common checks.",
       }),
     }),
-    async execute(toolCallId, params, onUpdate, ctx, signal) {
+    async execute(toolCallId, params, signal, onUpdate, ctx) {
       const commands = params.commands.length > 0 ? params.commands : getDefaultQualityChecks();
 
       let results = [];
