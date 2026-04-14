@@ -47,9 +47,11 @@ You can convert any Markdown PRD to the Ralph format using the built-in skill:
 ### 2. Start the Autonomous Loop
 Run Ralph and tell it how many iterations (stories) it should try to complete:
 ```bash
-/ralph 10
+/ralph 20
 ```
 Ralph will now take the wheel, creating a branch, implementing stories, running tests, and committing code until it's done or out of iterations.
+
+Ralph requires a clean git worktree before it starts so each story commit only contains that story's changes. If a child iteration stalls or fails mid-story, Ralph now automatically rolls back unfinished uncommitted changes before stopping so the next `/ralph-continue` is not blocked by leftover partial edits.
 
 ### 3. Check Status & Progress
 Want to see where it is?
@@ -67,9 +69,9 @@ cat progress.txt
 
 | Command | Description |
 | :--- | :--- |
-| `/ralph [max]` | Starts the autonomous implementation loop. |
+| `/ralph [max]` | Starts the autonomous implementation loop (default: 20). |
 | `/ralph-status` | Shows which stories are complete and which are pending. |
-| `/ralph-continue [max]` | Picks up where it left off if it hit the iteration limit. |
+| `/ralph-continue [max]` | Picks up where it left off if it hit the iteration limit (default: 20). |
 
 ---
 

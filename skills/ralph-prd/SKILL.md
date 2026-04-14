@@ -234,10 +234,10 @@ Add ability to mark tasks with different statuses.
 Once you have prd.json, you can run Ralph:
 
 ```bash
-/ralph 10
+/ralph 20
 ```
 
-This will start Ralph with max 10 iterations. Ralph will:
+This will start Ralph with max 20 iterations. Ralph will:
 1. Create/check out the branch specified in `branchName`
 2. Spawn fresh pi instances for each iteration
 3. Work through stories in priority order

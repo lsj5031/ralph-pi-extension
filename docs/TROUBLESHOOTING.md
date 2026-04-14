@@ -23,12 +23,12 @@ Common issues and solutions when using Ralph with pi code agent.
 
 1. **Check extension is installed:**
 ```bash
-ls ~/.pi/agent/extensions/ralph.ts
+pi list
 ```
 
-If missing, copy it:
+If Ralph is not listed, install it:
 ```bash
-cp ralph.ts ~/.pi/agent/extensions/
+pi install https://github.com/lsj5031/ralph-pi-extension
 ```
 
 2. **Restart pi:**
@@ -195,7 +195,7 @@ See how many stories are pending.
 
 2. **Continue Ralph:**
 ```bash
-/ralph-continue 10
+/ralph-continue 20
 ```
 
 3. **Increase max iterations:**
@@ -209,6 +209,7 @@ See how many stories are pending.
 - No progress for long time
 - Same story repeats
 - No commits being made
+- "Child pi stalled" error message
 
 **Solutions:**
 
@@ -225,15 +226,99 @@ git status
 git log --oneline -5
 ```
 
-3. **Manually complete the story:**
+3. **Check .ralph/ diagnostics:**
+Ralph saves child-run diagnostics to `.ralph/child-runs/`. Check the latest run:
+```bash
+ls -lt .ralph/child-runs/ | head -3
+cat .ralph/child-runs/<latest-dir>/summary.json
+```
+
+4. **Manually complete the story:**
 - Fix any issues
 - Run quality checks
-- Mark story as complete manually
+- Mark story as complete manually in `prd.json` (set `passes: true`)
 
-4. **Restart Ralph:**
+5. **Restart Ralph:**
 ```bash
-/ralph-continue 10
+/ralph-continue 20
 ```
+
+### Child pi stalls repeatedly
+
+**Symptoms:**
+- "Child pi stalled: no meaningful progress for 180s"
+- "Child pi exploration stall" or "Child pi thinking stall"
+- Multiple iterations fail with zero implementation
+
+**Solutions:**
+
+1. **Check child diagnostics:**
+```bash
+ls -lt .ralph/child-runs/ | head -3
+cat .ralph/child-runs/<latest-dir>/summary.json
+```
+
+Look for:
+- `toolCounts`: Zero implementation tools (edit, write, str_replace) indicates the model is stuck reading/planning
+- `terminationReason`: `meaningful-stall` means the child timed out
+
+2. **Simplify the story:**
+The story may be too complex. Split it in `prd.json`:
+```bash
+nano prd.json
+# Split the failing story into 2-3 smaller stories
+```
+
+3. **Check for project setup issues:**
+If the child can't find files or tools, ensure:
+- `package.json` scripts are correct
+- The project builds/typechecks manually
+- No permission issues on project directories
+
+4. **Try a different model:**
+You can invoke the `ralph_run_autonomous` tool directly (not a slash command) with custom provider/model parameters. From a pi session, ask the agent:
+```
+Use the ralph_run_autonomous tool with provider "anthropic" and model "claude-sonnet-4
+to run Ralph with maxIterations 20
+```
+
+### Dirty worktree / "uncommitted changes" error
+
+**Symptoms:**
+- Ralph refuses to start: "Uncommitted Changes" or dirty worktree error
+- Ralph halts mid-run: "could not restore a clean worktree"
+- `.ralph/` directory appears as untracked in `git status`
+
+**Solutions:**
+
+1. **Ralph auto-excludes `.ralph/`:**
+Ralph automatically adds `.ralph/` to `.git/info/exclude` at startup so its diagnostics directory never appears as untracked. If this fails, add it manually:
+```bash
+echo ".ralph/" >> .git/info/exclude
+```
+
+2. **Commit or stash your changes before starting Ralph:**
+```bash
+git stash
+/ralph 20
+git stash pop  # After Ralph finishes
+```
+
+3. **Permission-denied errors during cleanup:**
+If Ralph reports it can't restore a clean worktree due to permission errors (e.g., Docker-owned `.pnpm-store/`), this is now handled automatically — untracked files with restricted permissions are tolerated as they aren't Ralph's changes. If issues persist:
+```bash
+# Check what's dirty
+git status --porcelain
+
+# Manually reset Ralph's changes
+git checkout -- .
+
+# Remove Ralph's diagnostics
+rm -rf .ralph/
+```
+
+4. **Automatic rollback on stall/failure:**
+If a child iteration stalls or fails mid-story, Ralph automatically rolls back any uncommitted changes (`git reset --hard HEAD`) so the next `/ralph-continue` isn't blocked by leftover partial edits.
 
 ### No commits being made
 
@@ -294,11 +379,8 @@ tsc --noEmit
 2. **Fix errors:**
 Fix TypeScript errors and try again.
 
-3. **Update typecheck command:**
-If your project uses different command:
-```bash
-/ralph-quality-check ["custom-typecheck-command"]
-```
+3. **Custom quality check commands:**
+Quality checks are run automatically by the child agent via the `ralph_quality_check` tool. If your project uses custom commands, ensure they are defined in your `package.json` scripts (e.g., `"typecheck": "tsc --noEmit"`).
 
 4. **Remove typecheck criterion:**
 Only if story doesn't involve TypeScript (rare).
@@ -319,11 +401,8 @@ npm test
 2. **Fix failing tests:**
 Fix test errors and try again.
 
-3. **Update test command:**
-If your project uses different command:
-```bash
-/ralph-quality-check ["npm run test:custom"]
-```
+3. **Custom test commands:**
+Quality checks are run automatically by the child agent. Ensure your `package.json` scripts are correctly configured.
 
 4. **Remove tests criterion:**
 Only if story has no testable logic.
@@ -347,10 +426,7 @@ eslint .
 Fix lint issues and try again.
 
 3. **Disable linter:**
-Remove from quality checks if not needed:
-```bash
-/ralph-quality-check ["npm run typecheck", "npm test"]
-```
+Quality checks are run automatically by the child agent. Ensure your `package.json` scripts (`typecheck`, `test`, `lint`) are correctly configured.
 
 ## Git Issues
 
@@ -405,7 +481,7 @@ If too many conflicts:
 ```bash
 git checkout main
 git branch -D ralph/your-feature
-/ralph 10  # Will create new branch
+/ralph 20  # Will create new branch
 ```
 
 ### Branch already exists
@@ -425,7 +501,7 @@ git checkout ralph/your-feature
 2. **Delete existing branch:**
 ```bash
 git branch -D ralph/your-feature
-/ralph 10  # Will create new branch
+/ralph 20  # Will create new branch
 ```
 
 3. **Update branchName in prd.json:**
@@ -487,7 +563,7 @@ git branch -D ralph/your-feature
 cp prd.json.backup prd.json
 
 # Start fresh
-/ralph 10
+/ralph 20
 ```
 
 ### Get Community Help
@@ -576,6 +652,12 @@ If something is wrong, fix it before continuing.
 
 ### "Branch already exists"
 - [See solution](#branch-already-exists)
+
+### "Child pi stalled"
+- [See solution](#child-pi-stalls-repeatedly)
+
+### "could not restore a clean worktree"
+- [See solution](#dirty-worktree--uncommitted-changes-error)
 
 ## Related Documentation
 

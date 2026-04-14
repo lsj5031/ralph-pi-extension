@@ -371,7 +371,7 @@ After creating `prd.json`:
 
 1. Place it in your project root
 2. Run `/ralph-status` to verify
-3. Run `/ralph 10` to start Ralph
+3. Run `/ralph 20` to start Ralph
 4. Monitor with `cat progress.txt`
 
 ## Related Documentation

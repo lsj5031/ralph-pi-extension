@@ -7,6 +7,18 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Fixed
+- `.ralph/` diagnostics directory no longer appears as untracked in `git status` — automatically added to `.git/info/exclude` at startup
+- `git clean -fd` replaced with targeted `rmSync(.ralph/)` — the old command failed on Docker-owned directories like `.pnpm-store/` with permission denied, causing Ralph to halt
+- Remaining untracked files (`??`) after rollback are now tolerated — they aren't Ralph's changes and won't block subsequent iterations
+- Child stall detection now counts `thinking_delta`/`text_delta` events as meaningful progress — prevents false stall kills during long planning/thinking phases
+- General stall timeout increased from 90s to 180s for complex stories
+- Added exploration stall detection: kills child if 40+ exploration tools with 0 implementation tools after 180s
+- Added thinking-only stall detection: kills child if 0 tool calls after 180s (catches infinite reasoning loops)
+- Heartbeat guard prevents duplicate stall reports after first detection
+- Removed `--no-session` from child args — session logs now persist for debugging
+- `ensureRalphGitExclude` now guards against non-git directories to avoid creating orphan `.git/` dirs
+
 ### Planned
 - Web dashboard for monitoring Ralph progress
 - Support for multiple quality check profiles

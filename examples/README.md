@@ -32,7 +32,7 @@ nano prd.json
 
 3. **Run Ralph:**
 ```bash
-/ralph 10
+/ralph 20
 ```
 
 ## Example Structure
